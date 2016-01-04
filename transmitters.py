@@ -58,7 +58,15 @@ class transmitter_gfsk(gr.hier_block2):
             gr.io_signature(1, 1, gr.sizeof_gr_complex))
         self.mod = digital.gfsk_mod(4, sensitivity=0.1, bt=ebw)
         self.connect( self, self.mod, self )
-        #self.rate = 200e3/44.1e3
+
+class transmitter_cpfsk(gr.hier_block2):
+    modname = "CPFSK"
+    def __init__(self):
+        gr.hier_block2.__init__(self, "transmitter_cpfsk",
+            gr.io_signature(1, 1, gr.sizeof_char),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        self.mod = analog.cpfsk_bc(0.5, 1.0, sps)
+        self.connect( self, self.mod, self )
 
 class transmitter_fm(gr.hier_block2):
     modname = "WBFM"
@@ -89,6 +97,6 @@ class transmitter_am(gr.hier_block2):
         self.connect( self.src, (self.mod,1) )
 
 transmitters = {
-    "discrete":[transmitter_bpsk, transmitter_qpsk, transmitter_pam4, transmitter_qam16, transmitter_gfsk],
+    "discrete":[transmitter_bpsk, transmitter_qpsk, transmitter_pam4, transmitter_qam16, transmitter_gfsk, transmitter_cpfsk],
     "continuous":[transmitter_fm, transmitter_am]
     }
