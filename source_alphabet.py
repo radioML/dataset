@@ -12,7 +12,8 @@ class source_alphabet(gr.hier_block2):
                 gr.io_signature(1,1,gr.sizeof_char))
 
             self.src = blocks.file_source(gr.sizeof_char, "source_material/gutenberg_shakespeare.txt")
-            self.convert = blocks.packed_to_unpacked_bb(8, gr.GR_LSB_FIRST);
+            self.convert = blocks.packed_to_unpacked_bb(1, gr.GR_LSB_FIRST);
+            #self.convert = blocks.packed_to_unpacked_bb(8, gr.GR_LSB_FIRST);
             self.limit = blocks.head(gr.sizeof_char, limit)
             self.connect(self.src,self.convert)
 

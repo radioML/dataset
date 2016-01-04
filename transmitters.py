@@ -2,22 +2,47 @@
 import time, math
 from scipy.signal import get_window
 from gnuradio import gr, blocks, digital, analog, filter
+import mapper
 
-class transmitter_qpsk(gr.hier_block2):
+sps = 4
+ebw = 0.35
+
+class transmitter_mapper(gr.hier_block2):
+    def __init__(self, modtype, symvals, txname, samples_per_symbol=2, excess_bw=0.35):
+        gr.hier_block2.__init__(self, txname,
+            gr.io_signature(1, 1, gr.sizeof_char),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        self.mod = mapper.mapper(modtype, symvals)
+        # pulse shaping filter
+        nfilts = 32
+        ntaps = nfilts * 11 * int(samples_per_symbol)    # make nfilts filters of ntaps each
+        rrc_taps = filter.firdes.root_raised_cosine(
+            nfilts,          # gain
+            nfilts,          # sampling rate based on 32 filters in resampler
+            1.0,             # symbol rate
+            excess_bw, # excess bandwidth (roll-off factor)
+            ntaps)
+        self.rrc_filter = filter.pfb_arb_resampler_ccf(samples_per_symbol, rrc_taps)
+        self.connect(self, self.mod, self.rrc_filter, self)
+        #self.rate = const.bits_per_symbol()
+
+class transmitter_qpsk(transmitter_mapper):
     modname = "QPSK"
-    def __init__(self, const=digital.qpsk_constellation(), isps=4, ebw=0.35):
-        gr.hier_block2.__init__(self, "transmitter_qpsk",
-        gr.io_signature(1, 1, gr.sizeof_char),
-        gr.io_signature(1, 1, gr.sizeof_gr_complex))
-        self.mod = digital.generic_mod(constellation=const,
-            differential=False,
-            samples_per_symbol=isps,
-            pre_diff_code=True,
-            excess_bw=ebw,
-            verbose=False,
-            log=False)
-        self.connect(self, self.mod, self)
-        self.rate = const.bits_per_symbol()
+    def __init__(self):
+        transmitter_mapper.__init__(self, mapper.QPSK,
+            [0,1,3,2], "transmitter_qpsk", sps, ebw)
+
+class transmitter_pam4(transmitter_mapper):
+    modname = "PAM4"
+    def __init__(self):
+        transmitter_mapper.__init__(self, mapper.PAM4,
+            [0,1,3,2], "transmitter_pam4", sps, ebw)
+
+class transmitter_qam16(transmitter_mapper):
+    modname = "QAM16"
+    def __init__(self):
+        transmitter_mapper.__init__(self, mapper.QAM16,
+            [2,6,14,10,3,7,15,11,1,5,13,9,0,4,12,8], "transmitter_qam16", sps, ebw)
 
 class transmitter_fm(gr.hier_block2):
     modname = "WBFM"
@@ -48,6 +73,6 @@ class transmitter_am(gr.hier_block2):
         self.connect( self.src, (self.mod,1) )
 
 transmitters = {
-    "discrete":[transmitter_qpsk],
+    "discrete":[transmitter_qpsk, transmitter_pam4, transmitter_qam16],
     "continuous":[transmitter_fm, transmitter_am]
     }
