@@ -44,6 +44,16 @@ class transmitter_qam16(transmitter_mapper):
         transmitter_mapper.__init__(self, mapper.QAM16,
             [2,6,14,10,3,7,15,11,1,5,13,9,0,4,12,8], "transmitter_qam16", sps, ebw)
 
+class transmitter_gfsk(gr.hier_block2):
+    modname = "GFSK"
+    def __init__(self):
+        gr.hier_block2.__init__(self, "transmitter_gfsk",
+            gr.io_signature(1, 1, gr.sizeof_char),
+            gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        self.mod = digital.gfsk_mod(4, sensitivity=0.1, bt=ebw)
+        self.connect( self, self.mod, self )
+        #self.rate = 200e3/44.1e3
+
 class transmitter_fm(gr.hier_block2):
     modname = "WBFM"
     def __init__(self):
@@ -73,6 +83,6 @@ class transmitter_am(gr.hier_block2):
         self.connect( self.src, (self.mod,1) )
 
 transmitters = {
-    "discrete":[transmitter_qpsk, transmitter_pam4, transmitter_qam16],
+    "discrete":[transmitter_qpsk, transmitter_pam4, transmitter_qam16, transmitter_gfsk],
     "continuous":[transmitter_fm, transmitter_am]
     }
