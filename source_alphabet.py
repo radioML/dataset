@@ -4,9 +4,7 @@ import mediatools
 
 class source_alphabet(gr.hier_block2):
     def __init__(self, dtype="discrete", limit=10000):
-        print "dtype",dtype
         if(dtype == "discrete"):
-            print "using discrete source"
             gr.hier_block2.__init__(self, "source_alphabet",
                 gr.io_signature(0,0,0),
                 gr.io_signature(1,1,gr.sizeof_char))
@@ -18,7 +16,6 @@ class source_alphabet(gr.hier_block2):
             self.connect(self.src,self.convert)
 
         else:   # "type_continuous"
-            print "using continuous source"
             gr.hier_block2.__init__(self, "source_alphabet",
                 gr.io_signature(0,0,0),
                 gr.io_signature(1,1,gr.sizeof_float))
