@@ -1,0 +1,3 @@
+[submodule "source_material"]
+	path = source_material
+	url = git@hume-gitlab.ncr.vt.edu:deepcograd/source_material.git
