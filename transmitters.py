@@ -26,6 +26,12 @@ class transmitter_mapper(gr.hier_block2):
         self.connect(self, self.mod, self.rrc_filter, self)
         #self.rate = const.bits_per_symbol()
 
+class transmitter_bpsk(transmitter_mapper):
+    modname = "BPSK"
+    def __init__(self):
+        transmitter_mapper.__init__(self, mapper.BPSK,
+            [0,1], "transmitter_bpsk", sps, ebw)
+
 class transmitter_qpsk(transmitter_mapper):
     modname = "QPSK"
     def __init__(self):
@@ -83,6 +89,6 @@ class transmitter_am(gr.hier_block2):
         self.connect( self.src, (self.mod,1) )
 
 transmitters = {
-    "discrete":[transmitter_qpsk, transmitter_pam4, transmitter_qam16, transmitter_gfsk],
+    "discrete":[transmitter_bpsk, transmitter_qpsk, transmitter_pam4, transmitter_qam16, transmitter_gfsk],
     "continuous":[transmitter_fm, transmitter_am]
     }
