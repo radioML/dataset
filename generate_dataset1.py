@@ -27,15 +27,18 @@ for alphabet_type in transmitters.keys():
         tb.run()
 
         print "finished: ", len(snk.data())
+        output[mod_type.modname] = np.array(snk.data(), dtype=np.complex64)
 
         plt.figure()
+        plt.subplot(2,1,1)
         plt.plot(10*np.log10(numpy.fft.fftshift(numpy.fft.fft(snk.data()))))
-        #plt.plot(snk.data())
+        plt.subplot(2,1,2)
+        plt.plot(snk.data())
         plt.title("Modulated %s"%(mod_type.modname))
+
 
 X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
 cPickle.dump( X, file("X.dat", "wb" ) )
-#sliced = timeseries_slicer.slice_timeseries_dict(output, 128, 64)
 
 plt.pause(5)
 #plt.show()
