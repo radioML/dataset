@@ -4,7 +4,7 @@ from scipy.signal import get_window
 from gnuradio import gr, blocks, digital, analog, filter
 import mapper
 
-sps = 4
+sps = 8
 ebw = 0.35
 
 class transmitter_mapper(gr.hier_block2):
@@ -56,7 +56,8 @@ class transmitter_gfsk(gr.hier_block2):
         gr.hier_block2.__init__(self, "transmitter_gfsk",
             gr.io_signature(1, 1, gr.sizeof_char),
             gr.io_signature(1, 1, gr.sizeof_gr_complex))
-        self.mod = digital.gfsk_mod(4, sensitivity=0.1, bt=ebw)
+        self.mod = digital.gfsk_mod(sps, sensitivity=0.1, bt=ebw)
+        #self.mod = digital.gfsk_mod(4, sensitivity=0.1, bt=ebw)
         self.connect( self, self.mod, self )
 
 class transmitter_cpfsk(gr.hier_block2):

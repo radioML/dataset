@@ -8,6 +8,8 @@ import numpy as np
 import numpy.fft, cPickle, gzip
 
 
+apply_channel = True
+
 output = {}
 for alphabet_type in transmitters.keys():
     print alphabet_type
@@ -18,12 +20,24 @@ for alphabet_type in transmitters.keys():
         src = source_alphabet(alphabet_type, tx_len)
         mod = mod_type()
         #chan = channels.selective_fading_model(8, 20.0/1e6, False, 4.0, 0, (0.0,0.1,1.3), (1,0.99,0.97), 8)
+        fD = 1
+        delays = [0.0, 0.3, 0.9]
+        mags = [1, 0.7, 0.4]
+        ntaps = 8
+        noise_amp = 0.1
+        chan = channels.dynamic_channel_model( 200e3, 0.1, 1e3, 0.1, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
+        #chan = channels.dynamic_channel_model( 200e3, 0, 1e3, 0, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
+        #chan = channels.dynamic_channel_model( 200e3, 0.1, 1e3, 0.1, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
 
         snk = blocks.vector_sink_c()
 
         tb = gr.top_block()
-        tb.connect(src, mod, snk)
-        #tb.connect(src, mod, chan, snk)
+
+        # connect blocks
+        if apply_channel:
+            tb.connect(src, mod, chan, snk)
+        else:
+            tb.connect(src, mod, snk)
         tb.run()
 
         print "finished: ", len(snk.data())
@@ -37,7 +51,8 @@ for alphabet_type in transmitters.keys():
         plt.plot(x[0:100000])
         plt.title("Modulated %s"%(mod_type.modname))
 
-X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
+X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
+#X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
 cPickle.dump( X, file("X_1_dict.dat", "wb" ) )
 #cPickle.dump( X, gzip.open("X_1_dict.pkl.gz", "wb" ) )
 print X.keys()
@@ -47,5 +62,5 @@ print X.shape
 cPickle.dump( X, file("X_1.dat", "wb" ) )
 #cPickle.dump( X, gzip.open("X_1.pkl.gz", "wb" ) )
 
-plt.pause(5)
-#plt.show()
+#plt.pause(5)
+plt.show()
