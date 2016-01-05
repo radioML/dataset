@@ -5,12 +5,12 @@ import timeseries_slicer
 from gnuradio import channels, gr, blocks
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy.fft, cPickle
+import numpy.fft, cPickle, gzip
 
 
+output = {}
 for alphabet_type in transmitters.keys():
     print alphabet_type
-    output = {}
     for i,mod_type in enumerate(transmitters[alphabet_type]):
         print "running test", i,mod_type
 
@@ -39,10 +39,13 @@ for alphabet_type in transmitters.keys():
 
 X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
 cPickle.dump( X, file("X_1_dict.dat", "wb" ) )
+#cPickle.dump( X, gzip.open("X_1_dict.pkl.gz", "wb" ) )
+print X.keys()
 #print len(X), X[X.keys()[0]].shape
 X = np.vstack(X.values())
 print X.shape
 cPickle.dump( X, file("X_1.dat", "wb" ) )
+#cPickle.dump( X, gzip.open("X_1.pkl.gz", "wb" ) )
 
 plt.pause(5)
 #plt.show()
