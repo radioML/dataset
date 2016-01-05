@@ -38,6 +38,7 @@ for alphabet_type in transmitters.keys():
         plt.title("Modulated %s"%(mod_type.modname))
 
 X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
+cPickle.dump( X, file("X_1_dict.dat", "wb" ) )
 #print len(X), X[X.keys()[0]].shape
 X = np.vstack(X.values())
 print X.shape
