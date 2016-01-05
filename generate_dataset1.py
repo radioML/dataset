@@ -17,7 +17,7 @@ for alphabet_type in transmitters.keys():
         print "running test", i,mod_type
 
         tx_len = int(100e3)
-        src = source_alphabet(alphabet_type, tx_len)
+        src = source_alphabet(alphabet_type, tx_len, True)
         mod = mod_type()
         #chan = channels.selective_fading_model(8, 20.0/1e6, False, 4.0, 0, (0.0,0.1,1.3), (1,0.99,0.97), 8)
         fD = 1

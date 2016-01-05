@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 from gnuradio import gr, blocks
 import mediatools
+import numpy as np
 
 class source_alphabet(gr.hier_block2):
-    def __init__(self, dtype="discrete", limit=10000):
+    def __init__(self, dtype="discrete", limit=10000, randomize=False):
         if(dtype == "discrete"):
             gr.hier_block2.__init__(self, "source_alphabet",
                 gr.io_signature(0,0,0),
@@ -14,6 +15,17 @@ class source_alphabet(gr.hier_block2):
             #self.convert = blocks.packed_to_unpacked_bb(8, gr.GR_LSB_FIRST);
             self.limit = blocks.head(gr.sizeof_char, limit)
             self.connect(self.src,self.convert)
+            last = self.convert
+
+            # whiten our sequence with a random block scrambler (optionally)
+            if(randomize):
+                rand_len = 256
+                rand_bits = np.random.randint(2, size=rand_len)
+                self.randsrc = blocks.vector_source_b(rand_bits, True)
+                self.xor = blocks.xor_bb()
+                self.connect(self.randsrc,(self.xor,1))
+                self.connect(last, self.xor)
+                last = self.xor
 
         else:   # "type_continuous"
             gr.hier_block2.__init__(self, "source_alphabet",
@@ -26,12 +38,13 @@ class source_alphabet(gr.hier_block2):
             self.convert = blocks.complex_to_float()
             self.limit = blocks.head(gr.sizeof_float, limit)
             self.connect(self.src,self.convert2,self.convert3, self.convert)
+            last = self.convert
 
         # connect head or not, and connect to output
         if(limit==None):
-            self.connect(self.convert, self)
+            self.connect(last, self)
         else:
-            self.connect(self.convert, self.limit, self)
+            self.connect(last, self.limit, self)
 
 
 if __name__ == "__main__":
