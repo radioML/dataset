@@ -14,7 +14,7 @@ for alphabet_type in transmitters.keys():
     for i,mod_type in enumerate(transmitters[alphabet_type]):
         print "running test", i,mod_type
 
-        tx_len = int(10e3)
+        tx_len = int(100e3)
         src = source_alphabet(alphabet_type, tx_len)
         mod = mod_type()
         #chan = channels.selective_fading_model(8, 20.0/1e6, False, 4.0, 0, (0.0,0.1,1.3), (1,0.99,0.97), 8)
@@ -31,13 +31,16 @@ for alphabet_type in transmitters.keys():
 
         plt.figure()
         plt.subplot(2,1,1)
-        plt.plot(10*np.log10(numpy.fft.fftshift(numpy.fft.fft(snk.data()))))
+        x = snk.data()
+        plt.plot(10*np.log10(numpy.fft.fftshift(numpy.fft.fft(x[0:100000]))))
         plt.subplot(2,1,2)
-        plt.plot(snk.data())
+        plt.plot(x[0:100000])
         plt.title("Modulated %s"%(mod_type.modname))
 
-
 X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
+#print len(X), X[X.keys()[0]].shape
+X = np.vstack(X.values())
+print X.shape
 cPickle.dump( X, file("X_1.dat", "wb" ) )
 
 plt.pause(5)
