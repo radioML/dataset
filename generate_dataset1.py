@@ -21,11 +21,11 @@ for alphabet_type in transmitters.keys():
         mod = mod_type()
         #chan = channels.selective_fading_model(8, 20.0/1e6, False, 4.0, 0, (0.0,0.1,1.3), (1,0.99,0.97), 8)
         fD = 1
-        delays = [0.0, 0.3, 0.9]
-        mags = [1, 0.7, 0.4]
+        delays = [0.0, 0.9, 1.7]
+        mags = [1, 0.8, 0.3]
         ntaps = 8
         noise_amp = 0.1
-        chan = channels.dynamic_channel_model( 200e3, 0.1, 1e3, 0.1, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
+        chan = channels.dynamic_channel_model( 200e3, 0.01, 1e3, 0.01, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
         #chan = channels.dynamic_channel_model( 200e3, 0, 1e3, 0, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
         #chan = channels.dynamic_channel_model( 200e3, 0.1, 1e3, 0.1, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
 
