@@ -38,7 +38,7 @@ for alphabet_type in transmitters.keys():
 
 
 X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
-cPickle.dump( X, file("X.dat", "wb" ) )
+cPickle.dump( X, file("X_1.dat", "wb" ) )
 
 plt.pause(5)
 #plt.show()

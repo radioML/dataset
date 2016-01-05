@@ -7,8 +7,8 @@ def slice_timeseries(x, l=128, d=64, max_k = None):
         k = max(k, max_k)
     X = np.zeros([k,2,l], dtype=np.float32)
     for i in range(0,k):
-        #w = np.ones([l])
-        w = np.sin(np.arange(0,np.pi,np.pi/l))
+        w = np.ones([l])
+        #w = np.sin(np.arange(0,np.pi,np.pi/l))
         #plt.figure()
         #plt.plot(w)
         #plt.show()
