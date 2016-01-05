@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 from transmitters import transmitters
 from source_alphabet import source_alphabet
+import timeseries_slicer
 from gnuradio import channels, gr, blocks
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy.fft
+import numpy.fft, cPickle
+
 
 for alphabet_type in transmitters.keys():
     print alphabet_type
+    output = {}
     for i,mod_type in enumerate(transmitters[alphabet_type]):
         print "running test", i,mod_type
 
@@ -30,5 +33,9 @@ for alphabet_type in transmitters.keys():
         #plt.plot(snk.data())
         plt.title("Modulated %s"%(mod_type.modname))
 
+X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
+cPickle.dump( X, file("X.dat", "wb" ) )
+#sliced = timeseries_slicer.slice_timeseries_dict(output, 128, 64)
 
-plt.show()
+plt.pause(5)
+#plt.show()
