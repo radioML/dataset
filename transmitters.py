@@ -56,9 +56,9 @@ class transmitter_gfsk(gr.hier_block2):
         gr.hier_block2.__init__(self, "transmitter_gfsk",
             gr.io_signature(1, 1, gr.sizeof_char),
             gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        self.repack = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         self.mod = digital.gfsk_mod(sps, sensitivity=0.1, bt=ebw)
-        #self.mod = digital.gfsk_mod(4, sensitivity=0.1, bt=ebw)
-        self.connect( self, self.mod, self )
+        self.connect( self, self.repack, self.mod, self )
 
 class transmitter_cpfsk(gr.hier_block2):
     modname = "CPFSK"

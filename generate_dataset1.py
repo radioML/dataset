@@ -47,9 +47,11 @@ for alphabet_type in transmitters.keys():
         plt.subplot(2,1,1)
         x = snk.data()
         plt.plot(10*np.log10(numpy.fft.fftshift(numpy.fft.fft(x[0:100000]))))
+        plt.title("Power Spectrum of Modulated %s"%(mod_type.modname))
         plt.subplot(2,1,2)
         plt.plot(x[0:100000])
-        plt.title("Modulated %s"%(mod_type.modname))
+        plt.title("Time Plot of Modulated %s"%(mod_type.modname))
+        plt.savefig('dataset1/%s.png'%(mod_type.modname))
 
 X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
 #X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
