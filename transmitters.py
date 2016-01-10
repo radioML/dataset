@@ -38,6 +38,12 @@ class transmitter_qpsk(transmitter_mapper):
         transmitter_mapper.__init__(self, mapper.QPSK,
             [0,1,3,2], "transmitter_qpsk", sps, ebw)
 
+class transmitter_8psk(transmitter_mapper):
+    modname = "8PSK"
+    def __init__(self):
+        transmitter_mapper.__init__(self, mapper.PSK8,
+            [0,1,3,2,7,6,4,5], "transmitter_8psk", sps, ebw)
+
 class transmitter_pam4(transmitter_mapper):
     modname = "PAM4"
     def __init__(self):
@@ -49,6 +55,19 @@ class transmitter_qam16(transmitter_mapper):
     def __init__(self):
         transmitter_mapper.__init__(self, mapper.QAM16,
             [2,6,14,10,3,7,15,11,1,5,13,9,0,4,12,8], "transmitter_qam16", sps, ebw)
+
+class transmitter_qam64(transmitter_mapper):
+    modname = "QAM64"
+    def __init__(self):
+        transmitter_mapper.__init__(self, mapper.QAM64,
+            [0,32,8,40,3,35,11,43,
+             48,16,56,24,51,19,59,27,
+            12,44,4,36,15,47,7,39,
+            60,28,52,20,63,31,55,23,
+            2,34,10,42,1,33,9,41,
+            50,18,58,26,49,17,57,25,
+            14,46,6,38,13,45,5,37,
+            62,30,54,22,61,29,53,21], "transmitter_qam64", sps, ebw)
 
 class transmitter_gfsk(gr.hier_block2):
     modname = "GFSK"
@@ -98,6 +117,6 @@ class transmitter_am(gr.hier_block2):
         self.connect( self.src, (self.mod,1) )
 
 transmitters = {
-    "discrete":[transmitter_bpsk, transmitter_qpsk, transmitter_pam4, transmitter_qam16, transmitter_gfsk, transmitter_cpfsk],
+    "discrete":[transmitter_bpsk, transmitter_qpsk, transmitter_8psk, transmitter_pam4, transmitter_qam16, transmitter_qam64, transmitter_gfsk, transmitter_cpfsk],
     "continuous":[transmitter_fm, transmitter_am]
     }
