@@ -2,8 +2,8 @@
 import time, math
 from scipy.signal import get_window
 from gnuradio import gr, blocks, digital, analog, filter
+from gnuradio.filter import firdes
 import mapper
-
 sps = 8
 ebw = 0.35
 
@@ -99,9 +99,9 @@ class transmitter_fm(gr.hier_block2):
         self.rate = 200e3/44.1e3
 
 class transmitter_am(gr.hier_block2):
-    modname = "AM"
+    modname = "AM-DSB"
     def __init__(self):
-        gr.hier_block2.__init__(self, "transmitter_fm",
+        gr.hier_block2.__init__(self, "transmitter_am",
         gr.io_signature(1, 1, gr.sizeof_float),
         gr.io_signature(1, 1, gr.sizeof_gr_complex))
         self.rate = 44.1e3/200e3
@@ -116,7 +116,28 @@ class transmitter_am(gr.hier_block2):
         self.connect( self, self.interp, self.cnv, self.mul, self.add, self.mod, self )
         self.connect( self.src, (self.mod,1) )
 
+class transmitter_amssb(gr.hier_block2):
+    modname = "AM-SSB"
+    def __init__(self):
+        gr.hier_block2.__init__(self, "transmitter_amssb",
+        gr.io_signature(1, 1, gr.sizeof_float),
+        gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        self.rate = 44.1e3/200e3
+        #self.rate = 200e3/44.1e3
+        self.interp = filter.fractional_interpolator_ff(0.0, self.rate)
+#        self.cnv = blocks.float_to_complex()
+        self.mul = blocks.multiply_const_ff(1.0)
+        self.add = blocks.add_const_ff(1.0)
+        self.src = analog.sig_source_f(200e3, analog.GR_SIN_WAVE, 0e3, 1.0)
+        #self.src = analog.sig_source_c(200e3, analog.GR_SIN_WAVE, 50e3, 1.0)
+        self.mod = blocks.multiply_ff()
+        #self.filt = filter.fir_filter_ccf(1, firdes.band_pass(1.0, 200e3, 10e3, 60e3, 0.25e3, firdes.WIN_HAMMING, 6.76))
+        self.filt = filter.hilbert_fc(401)
+        self.connect( self, self.interp, self.mul, self.add, self.mod, self.filt, self )
+        self.connect( self.src, (self.mod,1) )
+
+
 transmitters = {
     "discrete":[transmitter_bpsk, transmitter_qpsk, transmitter_8psk, transmitter_pam4, transmitter_qam16, transmitter_qam64, transmitter_gfsk, transmitter_cpfsk],
-    "continuous":[transmitter_fm, transmitter_am]
+    "continuous":[transmitter_fm, transmitter_am, transmitter_amssb]
     }
