@@ -12,7 +12,7 @@ apply_channel = True
 
 output = {}
 #snr_vals = [-10,-8,-6,-4,-2,0,2,4,6,8,10,12,14,16,18,20]
-snr_vals = [-10,-5,0,5,10,15,20]
+snr_vals = [-20,-15,-10,-5,0,5,10,15,20]
 for snr in snr_vals:
     for alphabet_type in transmitters.keys():
         print alphabet_type
