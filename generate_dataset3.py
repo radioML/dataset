@@ -3,7 +3,7 @@ from transmitters import transmitters
 from source_alphabet import source_alphabet
 import timeseries_slicer
 from gnuradio import channels, gr, blocks
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
 import numpy.fft, cPickle, gzip
 
@@ -13,6 +13,7 @@ apply_channel = True
 output = {}
 #snr_vals = [-10,-8,-6,-4,-2,0,2,4,6,8,10,12,14,16,18,20]
 snr_vals = [-20,-15,-10,-5,0,5,10,15,20]
+snr_vals = range(-20,20,2)
 for snr in snr_vals:
     for alphabet_type in transmitters.keys():
         print alphabet_type
@@ -48,15 +49,15 @@ for snr in snr_vals:
             print "finished: ", len(snk.data())
             output[(mod_type.modname, snr)] = np.array(snk.data(), dtype=np.complex64)
 
-            plt.figure()
-            plt.subplot(2,1,1)
+            #plt.figure()
+            #plt.subplot(2,1,1)
             x = snk.data()
-            plt.plot(10*np.log10(numpy.fft.fftshift(numpy.fft.fft(x[0:100000]))))
-            plt.title("Power Spectrum of Modulated %s"%(mod_type.modname))
-            plt.subplot(2,1,2)
-            plt.plot(x[0:100000])
-            plt.title("Time Plot of Modulated %s"%(mod_type.modname))
-            plt.savefig('dataset1/%s.png'%(mod_type.modname))
+            #plt.plot(10*np.log10(numpy.fft.fftshift(numpy.fft.fft(x[0:100000]))))
+            #plt.title("Power Spectrum of Modulated %s"%(mod_type.modname))
+            #plt.subplot(2,1,2)
+            #plt.plot(x[0:100000])
+            #plt.title("Time Plot of Modulated %s"%(mod_type.modname))
+            #plt.savefig('dataset1/%s.png'%(mod_type.modname))
 
 X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
 #X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
@@ -70,4 +71,4 @@ cPickle.dump( X, file("X_3.dat", "wb" ) )
 #cPickle.dump( X, gzip.open("X_1.pkl.gz", "wb" ) )
 
 #plt.pause(5)
-plt.show()
+#plt.show()
