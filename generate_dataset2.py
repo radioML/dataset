@@ -50,8 +50,8 @@ for alphabet_type in transmitters.keys():
 
         x = snk.data()
 
-X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
-#X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
+#X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
+X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
 cPickle.dump( X, file("X_2_dict.dat", "wb" ) )
 #cPickle.dump( X, gzip.open("X_1_dict.pkl.gz", "wb" ) )
 print X.keys()

@@ -36,5 +36,5 @@ def slice_timeseries_real(x, l=128, d=64, max_k = None):
 def slice_timeseries_real_dict(td, l=128, d=64, max_k = None):
     nd = {}
     for k,v in td.iteritems():
-        nd[k] = slice_timeseries_real(v)
+        nd[k] = slice_timeseries_real(v,l,d,max_k)
     return nd

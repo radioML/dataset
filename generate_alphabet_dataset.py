@@ -32,6 +32,6 @@ for alphabet_type in transmitters.keys():
     output[alphabet_type] = np.array(snk.data(), dtype=np.float32)
 
 print output
-X = timeseries_slicer.slice_timeseries_real_dict(output, 128, 32, 1000)
+X = timeseries_slicer.slice_timeseries_real_dict(output, 128, 64, 1000)
 cPickle.dump( X, file("alphabet_dict.dat", "wb" ) )
 

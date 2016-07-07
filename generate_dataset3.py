@@ -59,8 +59,8 @@ for snr in snr_vals:
             #plt.title("Time Plot of Modulated %s"%(mod_type.modname))
             #plt.savefig('dataset1/%s.png'%(mod_type.modname))
 
-X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
-#X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
+#X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
+X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
 cPickle.dump( X, file("X_3_dict.dat", "wb" ) )
 #cPickle.dump( X, gzip.open("X_1_dict.pkl.gz", "wb" ) )
 print X.keys()
