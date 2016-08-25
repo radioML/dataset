@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 def slice_timeseries(x, l=128, d=64, max_k = None):
     k = (len(x) - l + 1) / d
     if not max_k == None:
-        k = max(k, max_k)
+        k = min(k, max_k)
     X = np.zeros([k,2,l], dtype=np.float32)
     for i in range(0,k):
         # Rect Window
