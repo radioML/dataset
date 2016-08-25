@@ -3,10 +3,12 @@ from transmitters import transmitters
 from source_alphabet import source_alphabet
 import timeseries_slicer
 from gnuradio import channels, gr, blocks
-#import matplotlib.pyplot as plt
 import numpy as np
 import numpy.fft, cPickle, gzip
 
+'''
+Generate dataset with dynamic channel model across range of SNRs
+'''
 
 apply_channel = True
 
