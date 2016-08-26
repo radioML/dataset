@@ -24,6 +24,10 @@ for snr in snr_vals:
             print "running test", i,mod_type
 
             tx_len = int(10e3)
+            if mod_type.modname == "QAM64":
+                tx_len = int(30e3)
+            if mod_type.modname == "QAM16":
+                tx_len = int(20e3)
             src = source_alphabet(alphabet_type, tx_len, True)
             mod = mod_type()
             #chan = channels.selective_fading_model(8, 20.0/1e6, False, 4.0, 0, (0.0,0.1,1.3), (1,0.99,0.97), 8)
@@ -34,7 +38,7 @@ for snr in snr_vals:
             noise_amp = 10**(-snr/10.0)
             print noise_amp
             #noise_amp = 0.1
-            chan = channels.dynamic_channel_model( 200e3, 0.01, 1e3, 0.01, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
+            chan = channels.dynamic_channel_model( 200e3, 0.01, 1e2, 0.01, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
             #chan = channels.dynamic_channel_model( 200e3, 0, 1e3, 0, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
             #chan = channels.dynamic_channel_model( 200e3, 0.1, 1e3, 0.1, 1e3, 8, fD, True, 4, delays, mags, ntaps, noise_amp, 0x1337 )
 
