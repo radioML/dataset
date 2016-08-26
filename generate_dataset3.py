@@ -15,7 +15,7 @@ apply_channel = True
 
 output = {}
 #snr_vals = [-10,-8,-6,-4,-2,0,2,4,6,8,10,12,14,16,18,20]
-snr_vals = [-20,-15,-10,-5,0,5,10,15,20]
+min_length = 9e9
 snr_vals = range(-20,20,2)
 for snr in snr_vals:
     for alphabet_type in transmitters.keys():
@@ -50,9 +50,9 @@ for snr in snr_vals:
             tb.run()
 
             modulated_vector = np.array(snk.data(), dtype=np.complex64)
-            # grossssssssss. hardcode in some vlaues, the goal here is to get equal number of vectors per modulation
-            modulated_vector = modulated_vector[100:13100]
-            print "finished: ", len(snk.data())
+            if len(snk.data()) < min_length:
+                min_length = len(snk.data())
+                min_length_mod = mod_type
             output[(mod_type.modname, snr)] = modulated_vector
 
             #plt.figure()
@@ -65,11 +65,16 @@ for snr in snr_vals:
             #plt.title("Time Plot of Modulated %s"%(mod_type.modname))
             #plt.savefig('dataset1/%s.png'%(mod_type.modname))
 
+print "min length mod is %s with %i samples" % (min_length_mod, min_length)
+# trim the beginning and ends, and make all mods have equal number of samples
+start_indx = 100
+fin_indx = min_length-100
+for mod, snr in output:
+ output[(mod,snr)] = output[(mod,snr)][start_indx:fin_indx]
 #X = timeseries_slicer.slice_timeseries_dict(output, 64, 32, 1000)
 X = timeseries_slicer.slice_timeseries_dict(output, 128, 64, 1000)
 cPickle.dump( X, file("X_3_dict.dat", "wb" ) )
 #cPickle.dump( X, gzip.open("X_1_dict.pkl.gz", "wb" ) )
-print X.keys()
 #print len(X), X[X.keys()[0]].shape
 X = np.vstack(X.values())
 print X.shape
