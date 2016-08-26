@@ -1,6 +1,7 @@
 
 import numpy as np
 import cPickle
+import matplotlib.pyplot as plt
 
 def calc_vec_energy(vec):
     isquared = np.power(vec[0],2.0)
@@ -24,6 +25,9 @@ def open_ds(location="X_3_dict.dat"):
 
 def main():
     ds = open_ds()
+    plt.plot(ds[('BPSK', 12)][25][0][:])
+    plt.plot(ds[('BPSK', 12)][25][1][:])
+    plt.show()
     calc_mod_energies(ds)
 
 if __name__ == "__main__":

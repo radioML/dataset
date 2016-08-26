@@ -2,6 +2,7 @@
 from transmitters import transmitters
 from source_alphabet import source_alphabet
 import timeseries_slicer
+import analyze_stats
 from gnuradio import channels, gr, blocks
 import numpy as np
 import numpy.fft, cPickle, gzip
@@ -48,8 +49,11 @@ for snr in snr_vals:
                 tb.connect(src, mod, snk)
             tb.run()
 
+            modulated_vector = np.array(snk.data(), dtype=np.complex64)
+            # grossssssssss. hardcode in some vlaues, the goal here is to get equal number of vectors per modulation
+            modulated_vector = modulated_vector[100:13100]
             print "finished: ", len(snk.data())
-            output[(mod_type.modname, snr)] = np.array(snk.data(), dtype=np.complex64)
+            output[(mod_type.modname, snr)] = modulated_vector
 
             #plt.figure()
             #plt.subplot(2,1,1)
