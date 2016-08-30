@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.fft, cPickle, gzip
 
+'''
+Generate dataset with a single SNR
+'''
 
 apply_channel = True
 
