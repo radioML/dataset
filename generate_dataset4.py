@@ -63,6 +63,13 @@ for snr in snr_vals:
               while sampler_indx + vec_length < len(raw_output_vector) and modvec_indx < nvecs_per_key:
                   sampled_vector = raw_output_vector[sampler_indx:sampler_indx+vec_length]
                   energy = np.sum((np.abs(sampled_vector)))
+                  # n.b. I don't totally know that this is the right place to do this. On one hand
+                  # normalizing energy here removes biases from high energy QAMs and such. On the other
+                  # if we were coming out of an AGC then we would expect to see dramatically different
+                  # energy levels from QAMs than from PSKs for example. Are we destroying modulation
+                  # features by doing this on a per-vector basis rather than a whole-modulation basis?
+                  # E.x., should we instead force gr flowgraphs to emit samples [-1, 1] as if they were
+                  # going to be transmitted, or do some kind of AGC approximation here?
                   sampled_vector = sampled_vector / energy
                   dataset[(mod_type.modname, snr)][modvec_indx,0,:] = np.real(sampled_vector)
                   dataset[(mod_type.modname, snr)][modvec_indx,1,:] = np.imag(sampled_vector)
