@@ -61,26 +61,19 @@ for snr in snr_vals:
               sampler_indx = random.randint(50, 500)
               while sampler_indx + vec_length < len(raw_output_vector) and modvec_indx < nvecs_per_key:
                   sampled_vector = raw_output_vector[sampler_indx:sampler_indx+vec_length]
+                  # Normalize the energy in this vector to be 1
                   energy = np.sum((np.abs(sampled_vector)))
-                  # n.b. I don't totally know that this is the right place to do this. On one hand
-                  # normalizing energy here removes biases from high energy QAMs and such. On the other
-                  # if we were coming out of an AGC then we would expect to see dramatically different
-                  # energy levels from QAMs than from PSKs for example. Are we destroying modulation
-                  # features by doing this on a per-vector basis rather than a whole-modulation basis?
-                  # E.x., should we instead force gr flowgraphs to emit samples [-1, 1] as if they were
-                  # going to be transmitted, or do some kind of AGC approximation here?
                   sampled_vector = sampled_vector / energy
                   dataset[(mod_type.modname, snr)][modvec_indx,0,:] = np.real(sampled_vector)
                   dataset[(mod_type.modname, snr)][modvec_indx,1,:] = np.imag(sampled_vector)
                   # bound the upper end very high so it's likely we get multiple passes through
-                  # independent channels. is there a better way to do this?
+                  # independent channels
                   sampler_indx += random.randint(vec_length, round(len(raw_output_vector)*.05))
                   modvec_indx += 1
 
               if modvec_indx == nvecs_per_key:
                   # we're all done
                   insufficient_modsnr_vectors = False
-                  # TODO: do a np permuter to shuffle here ?
 
 print "all done. writing to disk"
 cPickle.dump( dataset, file("RML2016.10a_dict.dat", "wb" ) )
