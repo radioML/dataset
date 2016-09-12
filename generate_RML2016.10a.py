@@ -38,7 +38,6 @@ for snr in snr_vals:
                   tx_len = int(30e3)
               src = source_alphabet(alphabet_type, tx_len, True)
               mod = mod_type()
-              #chan = channels.selective_fading_model(8, 20.0/1e6, False, 4.0, 0, (0.0,0.1,1.3), (1,0.99,0.97), 8)
               fD = 1
               delays = [0.0, 0.9, 1.7]
               mags = [1, 0.8, 0.3]
@@ -83,15 +82,5 @@ for snr in snr_vals:
                   insufficient_modsnr_vectors = False
                   # TODO: do a np permuter to shuffle here ?
 
-
-              #plt.figure()
-              #plt.subplot(2,1,1)
-              #x = snk.data()
-              #plt.plot(10*np.log10(numpy.fft.fftshift(numpy.fft.fft(x[0:100000]))))
-              #plt.title("Power Spectrum of Modulated %s"%(mod_type.modname))
-              #plt.subplot(2,1,2)
-              #plt.plot(x[0:100000])
-              #plt.title("Time Plot of Modulated %s"%(mod_type.modname))
-              #plt.savefig('dataset1/%s.png'%(mod_type.modname))
 print "all done. writing to disk"
-cPickle.dump( dataset, file("X_4_dict.dat", "wb" ) )
+cPickle.dump( dataset, file("RML2016.10a_dict.dat", "wb" ) )
