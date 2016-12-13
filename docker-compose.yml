@@ -1,0 +1,8 @@
+version: '2'
+services:
+  minsdr:
+    image: radioml/minsdr
+    volumes:
+     - .:/code
+    working_dir: /code
+    command: /bin/bash -c "source /gr/setup_env.sh && python generate_RML2016.10a.py "
