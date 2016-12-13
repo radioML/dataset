@@ -1,1 +1,1 @@
-sudo  docker run -v $PWD:/code -w /code --rm -it radioml/minsdr /bin/bash -lc "python generate_RML2016.10a.py"
+docker-compose up minsdr
