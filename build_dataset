@@ -1,1 +1,1 @@
-docker-compose up minsdr
+docker run --rm -v $PWD:/code -w /code radioml/minsdr /bin/bash -c "source /gr/setup_env.sh && python generate_RML2016.10a.py"
